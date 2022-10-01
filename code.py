@@ -33,29 +33,99 @@ def find_exit(board, row, column):
 
 def find_shortest_path(board, exits, row, column):
   # choose shortest
-  dlist = move_to_exit(board, exits, row, column)
+  dlist = paths_to_exits(board, exits, row, column)
   sorted(dlist, key=lambda tup: (tup[1]) )
   if dlist:
     return dlist[0]
   else:
     return (-1, -1)
 
-def move_to_exit(board, exits, row, column):
-  # BFS, traverse all exits, if any, add distance and exit to dlist
-  # mark visited with len
+def paths_to_exits(board, exits, row, column):
+  # generate adjacency list
+  # BFS, traverse all exits, if any, find shortest path
+  # if found, add distance and exit to dlist
+  # (mark visited with len)
   distance_matrix = copy.copy(board)
   h = len(board)
   l = len(board[0])
+  print("h: " + str(h))
+  print("l: "+ str(l))
 
   dlist = []
-  c_row = row
-  c_column = column
-  dist = 0
+  adj = {}
 
+  # generate adjacency list (works)
+  for i in range(0, h):
+      for j in range(0, l):
+          adj[(i, j)] = []
+          if board[i][j] == '0':
+              add_adj(adj, board, i, j, h, l)
 
-    print("dlist: "+ str(dlist))
-    return dlist
+  print("adj: "+str(adj))
 
+  # BFS for shortest paths from start to each exits
+  start = (row, column)
+  for exit in exits:
+      dist = shortest_path(adj, start, exit)
+      if dist != None:
+          dlist.append([exit, dist])
+
+  print("dlist: "+ str(dlist))
+  return dlist
+
+def shortest_path(adj, start, exit):
+    # if exists, return dist, else return None
+    
+
+# works
+def add_adj(adj, board, i, j, h, l):
+    # not top row
+    if i > 0:
+        if board[i-1][j] == '0':
+            adj[(i, j)].append((i-1, j))
+        # not bottom row
+        if i < h-1:
+            if board[i+1][j] == '0':
+                adj[(i, j)].append((i+1, j))
+            # not left column
+            if j > 0:
+                if board[i][j-1] == '0':
+                    adj[(i, j)].append((i, j-1))
+                # not right column
+                if j < l-1:
+                    if board[i][j+1] == '0':
+                        adj[(i, j)].append((i, j+1))
+                else:
+                    if board[i-1][j] == '0':
+                        adj[(i, j)].append((i-1, j))
+                    if board[i+1][j] == '0':
+                        adj[(i, j)].append((i+1, j))
+                    if board[i][j-1] == '0':
+                        adj[(i, j)].append((i, j-1))
+            else:
+                if board[i-1][j] == '0':
+                    adj[(i, j)].append((i-1, j))
+                if board[i+1][j] == '0':
+                    adj[(i, j)].append((i+1, j))
+                if board[i][j+1] == '0':
+                    adj[(i, j)].append((i, j+1))
+        else:
+            if board[i][j-1] == '0':
+                adj[(i, j)].append((i, j-1))
+            #print("i: "+str(i)+", j: "+ str(j))
+            if board[i-1][j] == '0':
+                adj[(i, j)].append((i-1, j))
+            if board[i][j+1] == '0':
+                adj[(i, j)].append((i, j+1))
+    # top row
+    else:
+        if board[i][j-1] == '0':
+            adj[(i, j)].append((i, j-1))
+        if board[i+1][j] == '0':
+            adj[(i, j)].append((i+1, j))
+        if board[i][j+1] == '0':
+            adj[(i, j)].append((i, j+1))
+    return
 
 # works
 def all_exits(board, row, column):

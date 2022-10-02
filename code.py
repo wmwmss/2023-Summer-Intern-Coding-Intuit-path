@@ -45,7 +45,7 @@ def paths_to_exits(board, exits, row, column):
   # BFS, traverse all exits, if any, find shortest path
   # if found, add distance and exit to dlist
   # (mark visited with len)
-  distance_matrix = copy.copy(board)
+  # distance_matrix = copy.copy(board)
   h = len(board)
   l = len(board[0])
   print("h: " + str(h))
@@ -63,19 +63,71 @@ def paths_to_exits(board, exits, row, column):
 
   print("adj: "+str(adj))
 
+  # remove '+'
+  adj = {k: v for k, v in adj.items() if v!=[]}
+
   # BFS for shortest paths from start to each exits
   start = (row, column)
+  nodes = adj.keys()
+  print("nodes: "+str(nodes))
+
+
+
+
+  distance_dict = shortest_path(start, nodes, adj)
+
   for exit in exits:
-      dist = shortest_path(adj, start, exit)
+      dist = distance_dict.get(exit)
+      print("dist to "+str(exit)+": "+str(dist))
       if dist != None:
           dlist.append([exit, dist])
 
   print("dlist: "+ str(dlist))
   return dlist
 
-def shortest_path(adj, start, exit):
+'''
+exits:[(0, 1), (0, 2), (0, 3), (3, 1), (3, 3)]
+adj: {  (0, 0): [], (0, 1): [(1, 1), (0, 2)],
+        (0, 2): [(0, 1), (0, 3)], (0, 3): [(0, 2), (1, 3)],
+        (0, 4): [], (1, 0): [], (1, 1): [(0, 1), (2, 1)],
+        (1, 2): [], (1, 3): [(0, 3), (2, 3)], (1, 4): [],
+        (2, 0): [], (2, 1): [(1, 1), (3, 1), (2, 2)],
+        (2, 2): [(2, 1), (2, 3)], (2, 3): [(1, 3), (3, 3), (2, 2)],
+        (2, 4): [], (3, 0): [], (3, 1): [(2, 1), (2, 1)], (3, 2): [],
+        (3, 3): [(2, 3), (2, 3)], (3, 4): []}
+'''
+def shortest_path(current, nodes, distances):
+    # Dijkstra
     # if exists, return dist, else return None
-    
+
+    # These are all the nodes which have not been visited yet
+    unvisited = {node: None for node in nodes}
+    # It will store the shortest distance from one node to another
+    visited = {}
+    # It will store the predecessors of the nodes
+    currentDistance = 0
+    unvisited[current] = currentDistance
+    # Running the loop while all the nodes have been visited
+    while True:
+        # iterating through all the unvisited node
+        for neighbour in distances[current]:
+            # Iterating through the connected nodes of current_node (for
+            # example, a is connected with b and c having values 10 and 3
+            # respectively) and the weight of the edges
+            if neighbour not in unvisited: continue
+            newDistance = currentDistance + 1
+            if unvisited[neighbour] is None or unvisited[neighbour] > newDistance:
+                unvisited[neighbour] = newDistance
+        # Till now the shortest distance between the source node and target node
+        # has been found. Set the current node as the target node
+        visited[current] = currentDistance
+        del unvisited[current]
+        print("unvisited: "+str(unvisited))
+        if not unvisited: break
+        candidates = [node for node in unvisited.items() if node[1]]
+        print(sorted(candidates, key = lambda x: x[1]))
+        current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]
+    return visited
 
 # works
 def add_adj(adj, board, i, j, h, l):

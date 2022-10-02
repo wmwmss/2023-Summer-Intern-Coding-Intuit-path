@@ -34,9 +34,14 @@ def find_exit(board, row, column):
 def find_shortest_path(board, exits, row, column):
   # choose shortest
   dlist = paths_to_exits(board, exits, row, column)
-  sorted(dlist, key=lambda tup: (tup[1]) )
+  # remove start
+  del dlist[(row, column)]
+  #sorted(dlist, key=lambda tup: (tup[1]) )
+  sorted(dlist.items(), key=lambda x: x[1])
+  print("sorted dlist: "+str(dlist))
+
   if dlist:
-    return dlist[0]
+    return list(dlist.items())[0][0]
   else:
     return (-1, -1)
 
@@ -51,7 +56,7 @@ def paths_to_exits(board, exits, row, column):
   print("h: " + str(h))
   print("l: "+ str(l))
 
-  dlist = []
+  dlist = {}
   adj = {}
 
   # generate adjacency list (works)
@@ -71,16 +76,13 @@ def paths_to_exits(board, exits, row, column):
   nodes = adj.keys()
   print("nodes: "+str(nodes))
 
-
-
-
   distance_dict = shortest_path(start, nodes, adj)
 
   for exit in exits:
       dist = distance_dict.get(exit)
       print("dist to "+str(exit)+": "+str(dist))
       if dist != None:
-          dlist.append([exit, dist])
+          dlist.update({exit: dist})
 
   print("dlist: "+ str(dlist))
   return dlist

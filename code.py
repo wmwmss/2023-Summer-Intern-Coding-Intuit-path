@@ -112,14 +112,14 @@ def shortest_path(current, nodes, distances):
     # Running the loop while all the nodes have been visited
     while True:
         # iterating through all the unvisited node
-        for neighbour in distances[current]:
+        for neighbor in distances[current]:
             # Iterating through the connected nodes of current_node (for
             # example, a is connected with b and c having values 10 and 3
             # respectively) and the weight of the edges
-            if neighbour not in unvisited: continue
+            if neighbor not in unvisited: continue
             newDistance = currentDistance + 1
-            if unvisited[neighbour] is None or unvisited[neighbour] > newDistance:
-                unvisited[neighbour] = newDistance
+            if unvisited[neighbor] is None or unvisited[neighbor] > newDistance:
+                unvisited[neighbor] = newDistance
         # Till now the shortest distance between the source node and target node
         # has been found. Set the current node as the target node
         visited[current] = currentDistance
@@ -149,6 +149,7 @@ def add_adj(adj, board, i, j, h, l):
                 if j < l-1:
                     if board[i][j+1] == '0':
                         adj[(i, j)].append((i, j+1))
+                # right column
                 else:
                     if board[i-1][j] == '0':
                         adj[(i, j)].append((i-1, j))
@@ -156,6 +157,7 @@ def add_adj(adj, board, i, j, h, l):
                         adj[(i, j)].append((i+1, j))
                     if board[i][j-1] == '0':
                         adj[(i, j)].append((i, j-1))
+            # left column
             else:
                 if board[i-1][j] == '0':
                     adj[(i, j)].append((i-1, j))
@@ -163,6 +165,7 @@ def add_adj(adj, board, i, j, h, l):
                     adj[(i, j)].append((i+1, j))
                 if board[i][j+1] == '0':
                     adj[(i, j)].append((i, j+1))
+        # bottom row
         else:
             if board[i][j-1] == '0':
                 adj[(i, j)].append((i, j-1))
@@ -177,6 +180,8 @@ def add_adj(adj, board, i, j, h, l):
             adj[(i, j)].append((i, j-1))
         if board[i+1][j] == '0':
             adj[(i, j)].append((i+1, j))
+        #?
+        print("i: "+str(i)+" j: "+str(j))
         if board[i][j+1] == '0':
             adj[(i, j)].append((i, j+1))
     return
@@ -234,11 +239,20 @@ board0 = [
 ]
 
 start0 = (3, 1) # end to be (0, 1)
-
 main(board0, start0)
+start1 = (0, 1) # end to be (0, 2)
+main(board0, start1)
 
-
-
+board2 = [
+['+','+','+','+','+','+','+','0','0'],
+['+','+','0','0','0','0','0','+','+'],
+['0','0','0','0','0','+','+','0','+'],
+['+','+','0','+','+','+','+','0','0'],
+['+','+','0','0','0','0','0','0','+'],
+['+','+','0','+','+','0','+','0','+']
+]
+start2 = (5, 2) # end to be (2, 0)
+main(board2, start2)
 
 
 

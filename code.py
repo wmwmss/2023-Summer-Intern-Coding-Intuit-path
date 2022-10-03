@@ -171,20 +171,21 @@ def all_exits(board, row, column):
     if x == '0':
       exits.append((0,itr))
 
-  for ibr,x in enumerate(board[len(board)-1]):
+  for ibr,x in enumerate(board[h-1]):
     if x == '0':
       exits.append((h-1,ibr))
 
 
-  for lc in range(0,h):
+  for lc in range(1,h-1):
     if board[lc][0] == '0':
       exits.append((lc, 0))
 
-  for rc in range(0,h):
+  for rc in range(1,h-1):
     if board[rc][l-1] == '0':
-      exits.append((rc, l))
+      exits.append((rc, l-1))
   #exits.remove([[row, column]])
   #sorted(exits, key=lambda tup: (tup[0],tup[1]) )
+  #print("all exits: "+str(exits))
   return exits
 
 

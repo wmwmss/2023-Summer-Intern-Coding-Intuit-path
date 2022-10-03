@@ -37,7 +37,8 @@ def find_shortest_path(board, exits, row, column):
   # remove start
   del dlist[(row, column)]
   #sorted(dlist, key=lambda tup: (tup[1]) )
-  sorted(dlist.items(), key=lambda x: x[1])
+  #sorted(dlist.items(), key=lambda x: x[1])
+  dlist = dict(sorted(dlist.items(), key=lambda item: item[1]))
   print("sorted dlist: "+str(dlist))
 
   if dlist:
@@ -133,57 +134,30 @@ def shortest_path(current, nodes, distances):
 
 # works
 def add_adj(adj, board, i, j, h, l):
-    # not top row
-    if i > 0:
-        if board[i-1][j] == '0':
-            adj[(i, j)].append((i-1, j))
-        # not bottom row
-        if i < h-1:
-            if board[i+1][j] == '0':
-                adj[(i, j)].append((i+1, j))
-            # not left column
-            if j > 0:
-                if board[i][j-1] == '0':
-                    adj[(i, j)].append((i, j-1))
-                # not right column
-                if j < l-1:
-                    if board[i][j+1] == '0':
-                        adj[(i, j)].append((i, j+1))
-                # right column
-                else:
-                    if board[i-1][j] == '0':
-                        adj[(i, j)].append((i-1, j))
-                    if board[i+1][j] == '0':
-                        adj[(i, j)].append((i+1, j))
-                    if board[i][j-1] == '0':
-                        adj[(i, j)].append((i, j-1))
-            # left column
-            else:
-                if board[i-1][j] == '0':
-                    adj[(i, j)].append((i-1, j))
-                if board[i+1][j] == '0':
-                    adj[(i, j)].append((i+1, j))
-                if board[i][j+1] == '0':
-                    adj[(i, j)].append((i, j+1))
-        # bottom row
-        else:
-            if board[i][j-1] == '0':
-                adj[(i, j)].append((i, j-1))
-            #print("i: "+str(i)+", j: "+ str(j))
-            if board[i-1][j] == '0':
-                adj[(i, j)].append((i-1, j))
-            if board[i][j+1] == '0':
-                adj[(i, j)].append((i, j+1))
-    # top row
-    else:
-        if board[i][j-1] == '0':
-            adj[(i, j)].append((i, j-1))
+    try:
         if board[i+1][j] == '0':
             adj[(i, j)].append((i+1, j))
-        #?
-        print("i: "+str(i)+" j: "+str(j))
+    except:
+        pass
+
+    try:
+        if board[i-1][j] == '0':
+            adj[(i, j)].append((i-1, j))
+    except:
+        pass
+
+    try:
         if board[i][j+1] == '0':
             adj[(i, j)].append((i, j+1))
+    except:
+        pass
+
+    try:
+        if board[i][j-1] == '0':
+            adj[(i, j)].append((i, j-1))
+    except:
+        pass
+
     return
 
 # works
@@ -260,31 +234,55 @@ main(board2, start2)
 # testing code recycle
 
 '''
-while(c_row-1>=0 and distance_matrix[c_row-1][c_column]!='+'):
-  dist = dist + 1
-  distance_matrix[c_row-1][c_column] = dist
-  c_row = c_row - 1
-  if distance_matrix[c_row][c_column] in exits:
-    dlist.append(((c_row, c_column), dist))
-
-  while(c_column+1<l and distance_matrix[c_row][c_column+1]!='+'):
-    dist = dist + 1
-    distance_matrix[c_row][c_column+1] = dist
-    c_column = c_column + 1
-    if distance_matrix[c_row][c_column] in exits:
-      dlist.append(((c_row, c_column), dist))
-
-    while(c_row+1<h and distance_matrix[c_row+1][c_column]!='+'):
-      dist = dist + 1
-      distance_matrix[c_row+1][c_column] = dist
-      c_row = c_row + 1
-      if distance_matrix[c_row][c_column] in exits:
-        dlist.append(((c_row, c_column), dist))
-
-      while(c_column-1>=0 and distance_matrix[c_row][c_column-1]!='+'):
-        dist = dist + 1
-        distance_matrix[c_row][c_column-1] = dist
-        c_column = c_column - 1
-        if distance_matrix[c_row][c_column] in exits:
-          dlist.append(((c_row, c_column), dist))
+# not top row
+if i > 0:
+    if board[i-1][j] == '0':
+        adj[(i, j)].append((i-1, j))
+    # not bottom row
+    if i < h-1:
+        if board[i+1][j] == '0':
+            adj[(i, j)].append((i+1, j))
+        # not left column
+        if j > 0:
+            if board[i][j-1] == '0':
+                adj[(i, j)].append((i, j-1))
+            # not right column
+            if j < l-1:
+                if board[i][j+1] == '0':
+                    adj[(i, j)].append((i, j+1))
+            # right column
+            else:
+                if board[i-1][j] == '0':
+                    adj[(i, j)].append((i-1, j))
+                if board[i+1][j] == '0':
+                    adj[(i, j)].append((i+1, j))
+                if board[i][j-1] == '0':
+                    adj[(i, j)].append((i, j-1))
+        # left column
+        else:
+            if board[i-1][j] == '0':
+                adj[(i, j)].append((i-1, j))
+            if board[i+1][j] == '0':
+                adj[(i, j)].append((i+1, j))
+            if board[i][j+1] == '0':
+                adj[(i, j)].append((i, j+1))
+    # bottom row
+    else:
+        if board[i][j-1] == '0':
+            adj[(i, j)].append((i, j-1))
+        #print("i: "+str(i)+", j: "+ str(j))
+        if board[i-1][j] == '0':
+            adj[(i, j)].append((i-1, j))
+        if board[i][j+1] == '0':
+            adj[(i, j)].append((i, j+1))
+# top row
+else:
+    if board[i][j-1] == '0':
+        adj[(i, j)].append((i, j-1))
+    if board[i+1][j] == '0':
+        adj[(i, j)].append((i+1, j))
+    #?
+    print("i: "+str(i)+" j: "+str(j))
+    if board[i][j+1] == '0':
+        adj[(i, j)].append((i, j+1))
 '''

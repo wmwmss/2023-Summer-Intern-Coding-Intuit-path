@@ -101,24 +101,26 @@ adj: {  (0, 0): [], (0, 1): [(1, 1), (0, 2)],
 '''
 def shortest_path(current, nodes, distances):
     # Dijkstra
-    # if exists, return dist, else return None
 
-    # These are all the nodes which have not been visited yet
+    # all the nodes which have not been visited yet
     unvisited = {node: None for node in nodes}
     # It will store the shortest distance from one node to another
     visited = {}
+
     # It will store the predecessors of the nodes
     currentDistance = 0
     unvisited[current] = currentDistance
+
     # Running the loop while all the nodes have been visited
     while True:
         # iterating through all the unvisited node
         for neighbor in distances[current]:
             # Iterating through the connected nodes of current_node (for
-            # example, a is connected with b and c having values 10 and 3
-            # respectively) and the weight of the edges
+            # example in a weighed graph, a is connected with b and c
+            # having values 10 and 3 respectively) and the weight of the edges
             if neighbor not in unvisited: continue
-            newDistance = currentDistance + 1
+            newDistance = currentDistance + 1 # unweighed graph
+            # update distance for neighbors in unvisited if not visited or shorter path
             if unvisited[neighbor] is None or unvisited[neighbor] > newDistance:
                 unvisited[neighbor] = newDistance
         # Till now the shortest distance between the source node and target node
@@ -127,7 +129,7 @@ def shortest_path(current, nodes, distances):
         del unvisited[current]
         print("unvisited: "+str(unvisited))
         if not unvisited: break
-        candidates = [node for node in unvisited.items() if node[1]]
+        candidates = [node for node in unvisited.items() if node[1]] # list
         print(sorted(candidates, key = lambda x: x[1]))
         if not candidates: break
         current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]

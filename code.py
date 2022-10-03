@@ -38,7 +38,7 @@ def find_shortest_path(board, exits, row, column):
   del dlist[(row, column)]
   #sorted(dlist, key=lambda tup: (tup[1]) )
   #sorted(dlist.items(), key=lambda x: x[1])
-  dlist = dict(sorted(dlist.items(), key=lambda item: item[1]))
+  dlist = dict(sorted(dlist.items(), key=lambda item: (item[1], item[0][0], item[0][1])))
   print("sorted dlist: "+str(dlist))
 
   if dlist:
@@ -129,6 +129,7 @@ def shortest_path(current, nodes, distances):
         if not unvisited: break
         candidates = [node for node in unvisited.items() if node[1]]
         print(sorted(candidates, key = lambda x: x[1]))
+        if not candidates: break
         current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]
     return visited
 
